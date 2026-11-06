@@ -1461,3 +1461,9 @@ tbody tr:last-child td {
         width: 100%;
     }
 }
+
+/* NAMA BARANG DAN QTY TIDAK BOLD */
+.detail-item,
+.detail-qty {
+    font-weight: 400 !important;
+}

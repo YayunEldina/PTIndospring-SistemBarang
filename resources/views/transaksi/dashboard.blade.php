@@ -132,7 +132,6 @@
 
     <!-- KOLOM KIRI: DAFTAR TRANSAKSI -->
     <section class="transaction-list">
-        <!-- SUMMARY + FILTER -->
         <div class="top-row">
 
             <!-- FILTER -->
@@ -318,9 +317,9 @@
                             </td>
 
                             <td>
-                                <strong class="detail-item">
+                                <span class="detail-item">
                                     {{ $detail->barang->NAMA_BARANG ?? '-' }}
-                                </strong>
+                                </span>
                             </td>
 
                             <td class="detail-qty">{{ $detail->QTY }}</td>

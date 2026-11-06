@@ -106,7 +106,7 @@
                     Inventory Management / <span>Data Transaksi</span>
                 </p>
 
-                <h1>Data Transaksi Barang</h1>
+                <h1>Transaksi Barang</h1>
 
                 <p>
                     Kelola data transaksi barang masuk dan keluar.
