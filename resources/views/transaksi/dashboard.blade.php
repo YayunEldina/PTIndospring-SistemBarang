@@ -811,6 +811,7 @@ document.addEventListener('keydown', function (event) {
     }
 
 });
+applyFilter();
 
 })();
 </script>

@@ -196,7 +196,7 @@ public function update(Request $request, $noTransaksi)
         |--------------------------------------------------------------------------
         */
 
-        $laporanBarang = DB::table('MSBARANG as b')
+        $laporanBarang = DB::table('msbarang as b')
             ->leftJoin('trmutasidt as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
             ->leftJoin('trmutasih as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
                 $join->on('d.NO_TRANSAKSI', '=', 'h.NO_TRANSAKSI')
@@ -250,7 +250,7 @@ public function update(Request $request, $noTransaksi)
         |--------------------------------------------------------------------------
         */
 
-        $laporanKelompok = DB::table('MSBARANG as b')
+        $laporanKelompok = DB::table('msbarang as b')
             ->leftJoin('trmutasidt as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
             ->leftJoin('trmutasih as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
                 $join->on('d.NO_TRANSAKSI', '=', 'h.NO_TRANSAKSI')
@@ -300,7 +300,7 @@ public function update(Request $request, $noTransaksi)
 
         $laporanTertinggi = DB::table('trmutasih as h')
             ->join('trmutasidt as d', 'h.NO_TRANSAKSI', '=', 'd.NO_TRANSAKSI')
-            ->join('MSBARANG as b', 'd.KODE_BARANG', '=', 'b.KODE_BARANG')
+            ->join('msbarang as b', 'd.KODE_BARANG', '=', 'b.KODE_BARANG')
             ->where('h.JENIS_TRANSAKSI', 'KELUAR')
             ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir])
             ->select(
