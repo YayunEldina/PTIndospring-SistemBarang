@@ -66,6 +66,20 @@
             <span>Data Transaksi Barang</span>
         </a>
 
+         <a href="{{ route('transaksi.laporan') }}" class="menu">
+    <span class="menu-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19V5"/>
+            <path d="M4 19h17"/>
+            <path d="M8 15v-4"/>
+            <path d="M13 15V7"/>
+            <path d="M18 15V3"/>
+        </svg>
+    </span>
+    <span>Laporan Stok Barang</span>
+</a>
+
         <!-- PROFILE ADMINISTRATOR -->
         <div class="sidebar-profile">
             <div class="profile-avatar">A</div>

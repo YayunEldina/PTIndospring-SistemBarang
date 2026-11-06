@@ -182,4 +182,156 @@ public function update(Request $request, $noTransaksi)
         ->route('transaksi.index')
         ->with('success', 'Transaksi berhasil dihapus beserta seluruh detail barangnya.');
 }
+
+    // Menampilkan laporan stok dan transaksi periode Januari-Februari 2021
+    public function laporan()
+    {
+        $tanggalAwal = '2021-01-01';
+        $tanggalAkhir = '2021-02-28';
+
+        /*
+        |--------------------------------------------------------------------------
+        | LAPORAN 3.1
+        | Stok barang berdasarkan periode
+        |--------------------------------------------------------------------------
+        */
+
+        $laporanBarang = DB::table('MSBARANG as b')
+            ->leftJoin('TRMUTASIDT as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
+            ->leftJoin('TRMUTASIH as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+                $join->on('d.NO_TRANSAKSI', '=', 'h.NO_TRANSAKSI')
+                    ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir]);
+            })
+            ->select(
+                'b.KODE_BARANG',
+                'b.NAMA_BARANG',
+                'b.SATUAN',
+                'b.KATEGORI'
+            )
+            ->selectRaw("
+                COALESCE(SUM(
+                    CASE
+                        WHEN h.JENIS_TRANSAKSI = 'MASUK' THEN d.QTY
+                        ELSE 0
+                    END
+                ), 0) AS TRANS_MASUK
+            ")
+            ->selectRaw("
+                COALESCE(SUM(
+                    CASE
+                        WHEN h.JENIS_TRANSAKSI = 'KELUAR' THEN d.QTY
+                        ELSE 0
+                    END
+                ), 0) AS TRANS_KELUAR
+            ")
+            ->selectRaw("
+                COALESCE(SUM(
+                    CASE
+                        WHEN h.JENIS_TRANSAKSI = 'MASUK' THEN d.QTY
+                        WHEN h.JENIS_TRANSAKSI = 'KELUAR' THEN -d.QTY
+                        ELSE 0
+                    END
+                ), 0) AS STOK_AKHIR
+            ")
+            ->groupBy(
+                'b.KODE_BARANG',
+                'b.NAMA_BARANG',
+                'b.SATUAN',
+                'b.KATEGORI'
+            )
+            ->orderBy('b.KODE_BARANG')
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LAPORAN 3.2
+        | Stok barang berdasarkan kategori dan satuan
+        |--------------------------------------------------------------------------
+        */
+
+        $laporanKelompok = DB::table('MSBARANG as b')
+            ->leftJoin('TRMUTASIDT as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
+            ->leftJoin('TRMUTASIH as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+                $join->on('d.NO_TRANSAKSI', '=', 'h.NO_TRANSAKSI')
+                    ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir]);
+            })
+            ->select(
+                'b.KATEGORI',
+                'b.SATUAN'
+            )
+            ->selectRaw("
+                COALESCE(SUM(
+                    CASE
+                        WHEN h.JENIS_TRANSAKSI = 'MASUK' THEN d.QTY
+                        ELSE 0
+                    END
+                ), 0) AS TRANS_MASUK
+            ")
+            ->selectRaw("
+                COALESCE(SUM(
+                    CASE
+                        WHEN h.JENIS_TRANSAKSI = 'KELUAR' THEN d.QTY
+                        ELSE 0
+                    END
+                ), 0) AS TRANS_KELUAR
+            ")
+            ->selectRaw("
+                COALESCE(SUM(
+                    CASE
+                        WHEN h.JENIS_TRANSAKSI = 'MASUK' THEN d.QTY
+                        WHEN h.JENIS_TRANSAKSI = 'KELUAR' THEN -d.QTY
+                        ELSE 0
+                    END
+                ), 0) AS STOK_AKHIR
+            ")
+            ->groupBy('b.KATEGORI', 'b.SATUAN')
+            ->orderBy('b.KATEGORI')
+            ->orderBy('b.SATUAN')
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | LAPORAN 3.3
+        | Transaksi keluar tertinggi berdasarkan kategori dan satuan
+        |--------------------------------------------------------------------------
+        */
+
+        $laporanTertinggi = DB::table('TRMUTASIH as h')
+            ->join('TRMUTASIDT as d', 'h.NO_TRANSAKSI', '=', 'd.NO_TRANSAKSI')
+            ->join('MSBARANG as b', 'd.KODE_BARANG', '=', 'b.KODE_BARANG')
+            ->where('h.JENIS_TRANSAKSI', 'KELUAR')
+            ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir])
+            ->select(
+                'b.KATEGORI',
+                'b.SATUAN',
+                'b.KODE_BARANG',
+                'b.NAMA_BARANG'
+            )
+            ->selectRaw('SUM(d.QTY) AS TRANS_KELUAR')
+            ->groupBy(
+                'b.KATEGORI',
+                'b.SATUAN',
+                'b.KODE_BARANG',
+                'b.NAMA_BARANG'
+            )
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->KATEGORI . '|' . $item->SATUAN;
+            })
+            ->map(function ($items) {
+                return $items->sortByDesc('TRANS_KELUAR')->first();
+            })
+            ->values();
+
+
+        return view('transaksi.laporan', compact(
+            'laporanBarang',
+            'laporanKelompok',
+            'laporanTertinggi',
+            'tanggalAwal',
+            'tanggalAkhir'
+        ));
+    }
 }

@@ -7,4 +7,8 @@ Route::get('/', function () {
     return redirect()->route('transaksi.index');
 });
 
-Route::resource('transaksi', TransaksiController::class);
+Route::get('/transaksi/laporan', [TransaksiController::class, 'laporan'])
+    ->name('transaksi.laporan');
+
+Route::resource('transaksi', TransaksiController::class)
+    ->except(['show']);

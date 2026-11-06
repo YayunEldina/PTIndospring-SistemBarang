@@ -1,0 +1,230 @@
+
+/* =========================================
+   LAPORAN STOK BARANG
+========================================= */
+
+.report-section {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(15, 31, 74, 0.06);
+    border: 1px solid #e8edf5;
+}
+
+/* =========================================
+   HEADING LAPORAN
+========================================= */
+
+.report-heading {
+    margin-bottom: 20px;
+}
+
+.report-heading h3 {
+    color: #14213d;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.report-heading p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   PERIODE LAPORAN
+========================================= */
+
+.report-period {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 7px 12px;
+    border-radius: 7px;
+    background: #eff6ff;
+    color: #1d5fe0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* =========================================
+   ACTION BUTTON
+========================================= */
+
+.report-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* =========================================
+   TABLE WRAPPER
+========================================= */
+
+.report-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+}
+
+/* =========================================
+   REPORT TABLE
+========================================= */
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.report-table th {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 14px 12px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.report-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #edf1f6;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.report-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.report-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =========================================
+   NUMBER COLUMN
+========================================= */
+
+.report-table .number {
+    text-align: center;
+}
+
+.report-table .stock-value {
+    color: #15803d;
+    font-weight: 700;
+}
+
+/* =========================================
+   CATEGORY BADGE
+========================================= */
+
+.report-category {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    background: #eff6ff;
+    color: #1d5fe0;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* =========================================
+   EMPTY DATA
+========================================= */
+
+.report-empty {
+    text-align: center;
+    padding: 25px !important;
+    color: #94a3b8 !important;
+    font-weight: 500 !important;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .report-section {
+        padding: 16px;
+        margin-bottom: 18px;
+    }
+
+    .report-heading h3 {
+        font-size: 15px;
+    }
+
+    .report-heading p {
+        font-size: 12px;
+    }
+
+    .report-actions {
+        justify-content: flex-start;
+    }
+
+}
+
+/* =========================================
+   PRINT
+========================================= */
+
+@media print {
+
+    @page {
+        size: landscape;
+        margin: 12mm;
+    }
+
+    body {
+        background: #ffffff !important;
+        font-family: Arial, sans-serif;
+    }
+
+    .sidebar,
+    .report-actions,
+    .footer {
+        display: none !important;
+    }
+
+    .main {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+    .report-section {
+        box-shadow: none;
+        border: 1px solid #dddddd;
+        border-radius: 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+    }
+
+    .report-table {
+        min-width: 100%;
+    }
+
+    .report-table th,
+    .report-table td {
+        color: #222222;
+        border: 1px solid #dddddd;
+    }
+
+    .report-table th {
+        background: #eeeeee !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+}
