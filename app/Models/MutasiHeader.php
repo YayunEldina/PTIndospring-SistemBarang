@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MutasiHeader extends Model
 {
-    protected $table = 'TRMUTASIH';
+    protected $table = 'trmutasih';
 
     protected $primaryKey = 'NO_TRANSAKSI';
 

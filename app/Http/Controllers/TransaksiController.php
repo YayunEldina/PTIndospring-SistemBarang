@@ -32,7 +32,7 @@ class TransaksiController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'NO_TRANSAKSI' => 'required|string|max:5|unique:TRMUTASIH,NO_TRANSAKSI',
+            'NO_TRANSAKSI' => 'required|string|max:5|unique:trmutasih,NO_TRANSAKSI',
             'TANGGAL' => 'required|date',
             'JENIS_TRANSAKSI' => 'required|in:MASUK,KELUAR',
             'KATEGORI' => 'required|in:SUBMAT,RAWMAT',
@@ -41,7 +41,7 @@ class TransaksiController extends Controller
             'detail.*.KODE_BARANG' => [
                 'required',
                 'distinct',
-                'exists:MSBARANG,KODE_BARANG'
+                'exists:msbarang,KODE_BARANG'
             ],
             'detail.*.QTY' => 'required|integer|min:1',
         ]);
@@ -50,7 +50,7 @@ class TransaksiController extends Controller
         $kodeBarang = collect($data['detail'])
             ->pluck('KODE_BARANG');
 
-        $kategoriTidakSesuai = DB::table('MSBARANG')
+        $kategoriTidakSesuai = DB::table('msbarang')
             ->whereIn('KODE_BARANG', $kodeBarang)
             ->where('KATEGORI', '<>', $data['KATEGORI'])
             ->exists();
@@ -70,7 +70,7 @@ class TransaksiController extends Controller
             ]);
 
             foreach ($data['detail'] as $detail) {
-                DB::table('TRMUTASIDT')->insert([
+                DB::table('trmutasidt')->insert([
                     'NO_TRANSAKSI' => $data['NO_TRANSAKSI'],
                     'KODE_BARANG' => $detail['KODE_BARANG'],
                     'QTY' => $detail['QTY'],
@@ -111,7 +111,7 @@ public function update(Request $request, $noTransaksi)
         'detail.*.KODE_BARANG' => [
             'required',
             'distinct',
-            'exists:MSBARANG,KODE_BARANG'
+            'exists:msbarang,KODE_BARANG'
         ],
         'detail.*.QTY' => 'required|integer|min:1',
     ]);
@@ -120,7 +120,7 @@ public function update(Request $request, $noTransaksi)
     $kodeBarang = collect($data['detail'])
         ->pluck('KODE_BARANG');
 
-    $kategoriTidakSesuai = DB::table('MSBARANG')
+    $kategoriTidakSesuai = DB::table('msbarang')
         ->whereIn('KODE_BARANG', $kodeBarang)
         ->where('KATEGORI', '<>', $data['KATEGORI'])
         ->exists();
@@ -143,13 +143,13 @@ public function update(Request $request, $noTransaksi)
         ]);
 
         // Menghapus detail transaksi sebelumnya
-        DB::table('TRMUTASIDT')
+        DB::table('trmutasidt')
             ->where('NO_TRANSAKSI', $transaksi->NO_TRANSAKSI)
             ->delete();
 
         // Menyimpan kembali detail transaksi terbaru
         foreach ($data['detail'] as $detail) {
-            DB::table('TRMUTASIDT')->insert([
+            DB::table('trmutasidt')->insert([
                 'NO_TRANSAKSI' => $transaksi->NO_TRANSAKSI,
                 'KODE_BARANG' => $detail['KODE_BARANG'],
                 'QTY' => $detail['QTY'],
@@ -170,7 +170,7 @@ public function update(Request $request, $noTransaksi)
     DB::transaction(function () use ($transaksi) {
 
         // Menghapus seluruh barang dalam transaksi
-        DB::table('TRMUTASIDT')
+        DB::table('trmutasidt')
             ->where('NO_TRANSAKSI', $transaksi->NO_TRANSAKSI)
             ->delete();
 
@@ -197,8 +197,8 @@ public function update(Request $request, $noTransaksi)
         */
 
         $laporanBarang = DB::table('MSBARANG as b')
-            ->leftJoin('TRMUTASIDT as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
-            ->leftJoin('TRMUTASIH as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            ->leftJoin('trmutasidt as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
+            ->leftJoin('trmutasih as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
                 $join->on('d.NO_TRANSAKSI', '=', 'h.NO_TRANSAKSI')
                     ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir]);
             })
@@ -251,8 +251,8 @@ public function update(Request $request, $noTransaksi)
         */
 
         $laporanKelompok = DB::table('MSBARANG as b')
-            ->leftJoin('TRMUTASIDT as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
-            ->leftJoin('TRMUTASIH as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
+            ->leftJoin('trmutasidt as d', 'b.KODE_BARANG', '=', 'd.KODE_BARANG')
+            ->leftJoin('trmutasih as h', function ($join) use ($tanggalAwal, $tanggalAkhir) {
                 $join->on('d.NO_TRANSAKSI', '=', 'h.NO_TRANSAKSI')
                     ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir]);
             })
@@ -298,8 +298,8 @@ public function update(Request $request, $noTransaksi)
         |--------------------------------------------------------------------------
         */
 
-        $laporanTertinggi = DB::table('TRMUTASIH as h')
-            ->join('TRMUTASIDT as d', 'h.NO_TRANSAKSI', '=', 'd.NO_TRANSAKSI')
+        $laporanTertinggi = DB::table('trmutasih as h')
+            ->join('trmutasidt as d', 'h.NO_TRANSAKSI', '=', 'd.NO_TRANSAKSI')
             ->join('MSBARANG as b', 'd.KODE_BARANG', '=', 'b.KODE_BARANG')
             ->where('h.JENIS_TRANSAKSI', 'KELUAR')
             ->whereBetween('h.TANGGAL', [$tanggalAwal, $tanggalAkhir])

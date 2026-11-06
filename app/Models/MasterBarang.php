@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MasterBarang extends Model
 {
-    protected $table = 'MSBARANG';
+    protected $table = 'msbarang';
 
     protected $primaryKey = 'KODE_BARANG';
 

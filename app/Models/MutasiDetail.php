@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MutasiDetail extends Model
 {
-    protected $table = 'TRMUTASIDT';
+    protected $table = 'trmutasidt';
 
     public $incrementing = false;
 
