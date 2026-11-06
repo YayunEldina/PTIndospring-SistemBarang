@@ -11,12 +11,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- CSS UTAMA -->
-    <link rel="stylesheet" href="{{ asset('css/transaksi.css') }}">
-
-    <!-- CSS KHUSUS DATA TRANSAKSI -->
-    <link rel="stylesheet" href="{{ asset('css/data-transaksi.css') }}">
-</head>
+   <link rel="stylesheet" href="{{ asset('css/transaksi.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('css/data-transaksi.css') }}?v={{ time() }}">
 
 <body>
 
