@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransaksiController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('transaksi.index');
 });
 
-Route::resource('transaksi', TransaksiController::class);
 Route::resource('transaksi', TransaksiController::class);
